@@ -29,6 +29,9 @@ $FROM="no-reply@yourdomain.com";
 /* optional: set a BCC recipient */
 $SEND_COPY_TO=false;
 //$SEND_COPY_TO="your.name@yourdomain.com";
+/* optional: email text */
+$EMAIL_TEXT=false;
+//$EMAIL_TEXT="Here are your screenshots";
 
 
 $success=false;
@@ -83,14 +86,27 @@ if (!preg_match("/Nintendo WiiU/", $_SERVER["HTTP_USER_AGENT"] ?? "")) {
 		$headers .= "MIME-Version: 1.0\r\n";
 		$headers .= "Content-Type: multipart/mixed; boundary=\"$boundary\"\r\n";
 
-		//$msg = "--$boundary\r\n";
-		//$msg .= "Content-Type: text/plain; charset=UTF-8\r\n\r\n";
-		//$msg .= "Your screenshots.\r\n\r\n";
-		$msg = "";
+		if($EMAIL_TEXT){
+			$msg = "--$boundary\r\n";
+			$msg .= "Content-Type: text/plain; charset=UTF-8\r\n\r\n";
+			$msg .= $EMAIL_TEXT."\r\n\r\n";
+		}else{
+			$msg = "";
+		}
 
+		$fileNameSuffix = "_".date("YmdHi");
 		foreach($filesToUpload as $file){
 			$fileContent = file_get_contents($file["tmp_name"]);
 			$fileName = basename($file["name"]);
+			if($matches=preg_match("/WiiU_screenshot_(TV|GamePad)_([0-9A-F]{5}).jpg/", $fileName)){
+				include("game_ids.inc.php");
+				$gameId=$matches[2];
+				if(isset(GAME_IDS[$gameId])){
+					$fileName=str_replace($matches[2], GAME_IDS[$gameId]."_".$fileNameSuffix, $fileName);
+				}else{
+					$fileName=str_replace($matches[2], $fileNameSuffix, $fileName);
+				}
+			}
 			$msg .= "--$boundary\r\n";
 			$msg .= "Content-Type: {$file['type']}; name=\"$fileName\"\r\n";
 			$msg .= "Content-Disposition: attachment; filename=\"$fileName\"\r\n";
