@@ -89,7 +89,7 @@ if (!preg_match("/Nintendo WiiU/", $_SERVER["HTTP_USER_AGENT"] ?? "")) {
 		if($EMAIL_TEXT){
 			$msg = "--$boundary\r\n";
 			$msg .= "Content-Type: text/plain; charset=UTF-8\r\n\r\n";
-			$msg .= $EMAIL_TEXT."\r\n\r\n";
+			$msg .= str_replace("%IP%", get_client_ip(), $EMAIL_TEXT)."\r\n\r\n";
 		}else{
 			$msg = "";
 		}
@@ -135,4 +135,19 @@ echo json_encode(array(
 ));
 exit;
 
+
+
+function get_client_ip(){
+	foreach(['HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR'] as $key){
+		if(isset($_SERVER[$key])){
+			foreach(explode(',', $_SERVER[$key]) as $ip){
+				$ip=trim($ip);
+				if(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false){
+					return $ip;
+				}
+			}
+		}
+	}
+	return 'unknown';
+}
 ?>
