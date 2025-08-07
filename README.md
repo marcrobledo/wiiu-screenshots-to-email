@@ -1,4 +1,8 @@
 # Send Wii U screenshots to email
+
+**Go here https://wiiu.marcrobledo.com/ in your Wii U Web Browser to use this tool**
+
+
 A simple web service that makes the most of Wii U's limited web browser capabilities to send game screenshots to your email.
 The backend was built with PHP, but it can be relatively easily ported to other programming languages.
 The frontend was built to be as fast, intuitive and user-friendly as possible, considering the outdated web browser's limitations.
@@ -14,9 +18,10 @@ As someone who likes taking screenshots of completed games, I missed this featur
 
 
 ## Where can I find it?
-Unfortunately, due to bandwidth reasons, I cannot host this service publicly. The sourcecode is available for anyone interested in running the service on their own server.
+You must go to https://wiiu.marcrobledo.com/ in your Wii U Web Browser and follow instructions there to send screenshots to your email.
+Keep in mind I am self-hosting this and that, due to bandwidth reasons, I might shutdown it at any time if there is an abuse of usage.
 
-If you plan to host it publicly, feel free to contact me, and I'll add a link here.
+The sourcecode is available for anyone interested in running the service on their own server. Feel free to host it anywhere else.
 
 
 ## Installation
