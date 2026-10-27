@@ -100,7 +100,7 @@ if (!preg_match("/Nintendo WiiU/", $_SERVER["HTTP_USER_AGENT"] ?? "")) {
 			$fileName = basename($file["name"]);
 			$matches;
 			if(preg_match("/WiiU_screenshot_(TV|GamePad)_([0-9A-F]{5}).jpg/", $fileName, $matches)){
-				include("game_ids.inc.php");
+				include_once("game_ids.inc.php");
 				$gameId=$matches[2];
 				if(isset(GAME_IDS[$gameId])){
 					$fileName=str_replace($matches[2], GAME_IDS[$gameId]."_".$fileNameSuffix, $fileName);
