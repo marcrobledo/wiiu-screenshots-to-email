@@ -126,9 +126,6 @@ input[type=email]:focus{
 #snackbar.show{
 	bottom:80px;
 }
-
-
-#section-form, #section-unsupported{display:none}
 	</style>
 	<script type="text/javascript"><!--
 const STRINGS=(function(userLanguage){
@@ -240,8 +237,8 @@ window.addEventListener('load', function(evt){
 	document.body.style.backgroundImage='url(assets/bg.png)';
 	document.getElementById('icon-title').src='assets/icon_title.png';
 
-	const isWiiU=typeof wiiu==='object' && /Nintendo WiiU/.test(navigator.userAgent);
-	if(isWiiU){
+	<?php $isWiiU = preg_match("/Nintendo WiiU/", $_SERVER["HTTP_USER_AGENT"] ?? ""); ?>
+	<?php if($isWiiU): ?>
 		/* UI strings translation */
 		document.getElementById('input-email').placeholder=_(document.getElementById('input-email').placeholder);
 		document.getElementById('btn-submit-label').innerHTML=_(document.getElementById('btn-submit-label').innerHTML);
@@ -340,11 +337,8 @@ window.addEventListener('load', function(evt){
 		document.getElementById('input-file0').value='';
 		document.getElementById('input-file1').value='';
 		refreshScreen();
+	<?php endif; ?>
 
-		document.getElementById('section-form').style.display='block';
-	}else{
-		document.getElementById('section-unsupported').style.display='block';
-	}
 });
 	--></script>
 </head>
@@ -356,32 +350,30 @@ window.addEventListener('load', function(evt){
 	</header>    
 
 	<section id="wrapper">
-		<div id="section-form">
-			<div id="snackbar">Success! Press %s to return to the game</div>
-			<form id="form" action="send.php" method="POST" enctype="multipart/form-data">
-				<div>
-					<div id="col-left">
-						<div class="form-row"><label><img id="icon-screen1" class="muted" /> <button type="button" id="btn-picker0"></button></label></div>
-						<div class="form-row"><label><img id="icon-screen2" class="muted" /> <button type="button" id="btn-picker1" disabled></button></label></div>
-						<div class="form-row"><label><img id="icon-envelope" class="muted" /> <input type="email" id="input-email" name="email" placeholder="Recipient address" required /></label></div>
-					</div>
-					<div id="col-right">
-						<button id="btn-submit" type="submit">
-							<div id="btn-submit-icon"><img id="icon-loading" /><img id="icon-submit" /></div>
-							<span id="btn-submit-label">Send</span>
-						</button>
-					</div>
+	<?php if($isWiiU): ?>
+		<div id="snackbar">Success! Press %s to return to the game</div>
+		<form id="form" action="send.php" method="POST" enctype="multipart/form-data">
+			<div>
+				<div id="col-left">
+					<div class="form-row"><label><img id="icon-screen1" class="muted" /> <button type="button" id="btn-picker0"></button></label></div>
+					<div class="form-row"><label><img id="icon-screen2" class="muted" /> <button type="button" id="btn-picker1" disabled></button></label></div>
+					<div class="form-row"><label><img id="icon-envelope" class="muted" /> <input type="email" id="input-email" name="email" placeholder="Recipient address" required /></label></div>
 				</div>
-				<br class="clearfix" />
+				<div id="col-right">
+					<button id="btn-submit" type="submit">
+						<div id="btn-submit-icon"><img id="icon-loading" /><img id="icon-submit" /></div>
+						<span id="btn-submit-label">Send</span>
+					</button>
+				</div>
+			</div>
+			<br class="clearfix" />
 
-				<input type="file" id="input-file0" name="screenshot0" accept="image/jpeg" required />
-				<input type="file" id="input-file1" name="screenshot1" accept="image/jpeg" disabled />
-			</form>
-		</div>
-
-		<div id="section-unsupported">
-			This service is only accessible via the Wii U web browser.
-		</div>
+			<input type="file" id="input-file0" name="screenshot0" accept="image/jpeg" required />
+			<input type="file" id="input-file1" name="screenshot1" accept="image/jpeg" disabled />
+		</form>
+	<?php else: ?>
+		This service is only accessible via the Wii U web browser.
+	<?php endif; ?>
 	</section>
 </body>
 </html>
