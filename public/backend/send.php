@@ -95,9 +95,15 @@ if (!preg_match("/Nintendo WiiU/", $_SERVER["HTTP_USER_AGENT"] ?? "")) {
 		}
 
 		$fileNameSuffix = date("YmdHi");
+		$validImages = 0;
 		foreach($filesToUpload as $file){
-			$fileContent = file_get_contents($file["tmp_name"]);
 			$fileName = basename($file["name"]);
+
+			if($validImages>=2 || $file["type"]!=="image/jpeg" || !preg_match("/WiiU_screenshot_(TV|GamePad)_/", $fileName)){
+				continue;
+			}
+
+			$fileContent = file_get_contents($file["tmp_name"]);
 			$matches;
 			if(preg_match("/WiiU_screenshot_(TV|GamePad)_([0-9A-F]{5}).jpg/", $fileName, $matches)){
 				include_once("game_ids.inc.php");
@@ -113,16 +119,22 @@ if (!preg_match("/Nintendo WiiU/", $_SERVER["HTTP_USER_AGENT"] ?? "")) {
 			$msg .= "Content-Disposition: attachment; filename=\"$fileName\"\r\n";
 			$msg .= "Content-Transfer-Encoding: base64\r\n\r\n";
 			$msg .= chunk_split(base64_encode($fileContent));
+
+			$validImages++;
 		}
 
 		$msg .= "--$boundary--\r\n";
 
-		//$success=true;
-		$success=mail($to, $subject, $msg, $headers);
-		if(!$success){
-			$errors[]="Failed while sending email";
-			$errors[]=$to;
-			$errors[]=$subject;
+		if($validImages){
+			$success=mail($to, $subject, $msg, $headers);
+			if(!$success){
+				$errors[]="Failed while sending email";
+				$errors[]=$to;
+				$errors[]=$subject;
+			}
+		}else{
+			//honeypot
+			$success=true;
 		}
 	}
 
