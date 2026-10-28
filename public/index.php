@@ -329,7 +329,7 @@ window.addEventListener('load', function(evt){
 			alert(
 				_('Use this website to send Wii U screenshots to your e-mail address') + '\n\n' +
 				_('This is not an official web service by Nintendo') + '\n\n' +
-				_('More info at %s').replace('%s', 'www.marcrobledo.com')
+				_('More info at %s').replace('%s', 'https://github.com/marcrobledo/wiiu-screenshots-to-email')
 			);
 		});
 
