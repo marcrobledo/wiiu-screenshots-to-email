@@ -3,7 +3,7 @@
 	This code is released under the MIT License.
 	http://opensource.org/licenses/MIT
 
-	Copyright (c) 2025 Marc Robledo, https://www.marcrobledo.com
+	Copyright (c) 2025-2026 Marc Robledo, https://www.marcrobledo.com
 
 	Permission is hereby granted, free of charge, to any person obtaining a copy
 	of this software and associated documentation files (the "Software"), to deal
