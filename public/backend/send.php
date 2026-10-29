@@ -44,7 +44,12 @@ if (!preg_match("/Nintendo WiiU/", $_SERVER["HTTP_USER_AGENT"] ?? "")) {
 }else if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 	$errors[]="Invalid request";
 
-}else if (!($to = filter_var(trim($_POST["email"]), FILTER_VALIDATE_EMAIL))) {
+}else if (
+	!isset($_POST["email"]) ||
+	!is_string($_POST["email"]) ||
+	preg_match("/[\r\n\s\t,]/", $_POST["email"]) ||
+	!($to = filter_var(trim($_POST["email"]), FILTER_VALIDATE_EMAIL))
+) {
 	$errors[]="Invalid email address.";
 
 }else{
@@ -78,6 +83,10 @@ if (!preg_match("/Nintendo WiiU/", $_SERVER["HTTP_USER_AGENT"] ?? "")) {
 		$boundary = "boundary_value";
 
 		$subject = $_POST["subject"]?? "Wii U screenshots";
+		$subject = preg_replace("/[\r\n\t]+/", "", $subject);
+		if(!$subject){
+			$subject = "Wii U screenshots";
+		}
 
 		$headers = "From: {$FROM}\r\n";
 		if($SEND_COPY_TO){
